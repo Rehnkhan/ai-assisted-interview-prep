@@ -23,6 +23,8 @@ from .serializers import ResumeSerializer
 import pdfplumber
 import docx
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 def extract_text_from_pdf(file_path):
 	with pdfplumber.open(file_path) as pdf:
@@ -62,8 +64,8 @@ class ResumeUploadView(APIView):
 		gemini_raw = None
 		try:
 			import requests
-			GEMINI_API_URL = os.environ.get('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent')
-			GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyALjSQuSzn1SdqBNe45eRif3KnJnIXSncQ')
+			GEMINI_API_URL = os.getenv('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent')
+			GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 			prompt = f"Resume Data (parsed):\n{text}\n\nJob Description and custom instructions:\n{job_desc}\n\nGenerate interview questions for this candidate based only on the data parsed from the resume and the job description. Format the questions in sections: Introduction, Projects, Work Experience (if any), and Data-based questions. Do not use generic skill-based questions."
 			payload = {
 				"contents": [{"parts": [{"text": prompt}]}]
